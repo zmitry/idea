@@ -40,12 +40,13 @@ const Button = styled.button`
   }
 `;
 
+type ModalClickHandler = (res: "ok" | "cancel") => void;
 // TODO it should be reuseable but there is not too much sense making it like that if we have only one alert
-export function Dialog({
-  onClick
-}: {
-  onClick: (res: "ok" | "cancel") => void;
-}) {
+export function Dialog({ onClick }: { onClick: ModalClickHandler }) {
+  const root = document.getElementById("modal");
+  if (!root) {
+    throw new Error("Can't find root object");
+  }
   return ReactDOM.createPortal(
     <DialogOverlay
       onClick={() => {
@@ -78,18 +79,17 @@ export function Dialog({
             onClick={() => {
               onClick("ok");
             }}
-            style={{}}
           >
             Ok
           </Button>
         </div>
       </DialogContent>
     </DialogOverlay>,
-    (window as any)["modal"]
+    root
   );
 }
 
-export function useDialog(fn: (res: "ok" | "cancel") => void) {
+export function useDialog(fn: ModalClickHandler) {
   const [isOpen, setState] = useState(false);
   function open() {
     setState(true);

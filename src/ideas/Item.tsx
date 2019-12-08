@@ -8,9 +8,9 @@ import LoaderIcon from "../assets/loader.gif";
 import styled from "@emotion/styled";
 import { Icon } from "../ui/Icon";
 import { useDialog } from "../ui/Dialog";
-import { useFormValues, decodeFormValues } from "../useFormValues";
+import { useFormValues, decodeFormValues } from "../hooks/useFormValues";
 import { Idea, removeIdea, updateIdea, saveIdea } from "../api";
-import { useAsyncCallback } from "../useAsync";
+import { useAsyncCallback } from "../hooks/useAsync";
 
 const StyledRow = styled.form`
   display: contents;
@@ -83,15 +83,13 @@ const TextInput = styled.input`
   border: none;
   border-bottom: 1px solid var(--secondary);
 `;
-function NumberField({
-  editable,
-  initialValue,
-  name
-}: {
+
+type NumberFieldProps = {
   editable: boolean;
   initialValue?: number;
   name: string;
-}) {
+};
+function NumberField({ editable, initialValue, name }: NumberFieldProps) {
   return (
     <span>
       <StyledNumberInput
@@ -124,6 +122,13 @@ function ComputedField({
   return <span> {Math.ceil(avg * 10) / 10}</span>;
 }
 
+type ItemProps = {
+  values: Partial<Idea>;
+  isCreate?: boolean;
+  onSave?: (values: Record<string, string>) => void;
+  onRemove?: () => void;
+};
+
 // todo we don't have all the possible states here
 // for instance there might be a lot of network connection errors or something else
 // these issues are rare but we need to provide some user feedback
@@ -132,12 +137,7 @@ export function Item({
   onSave,
   values,
   onRemove
-}: {
-  values: Partial<Idea>;
-  isCreate?: boolean;
-  onSave?: (values: Record<string, string>) => void;
-  onRemove?: () => void;
-}) {
+}: ItemProps) {
   const [isEditable, setEditable] = useState(isCreate);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -171,6 +171,13 @@ export function Item({
     }
     close();
   });
+
+  function handleItemRemove() {
+    setEditable(false);
+    if (isCreate) {
+      onRemove && onRemove();
+    }
+  }
 
   return (
     <StyledRow
@@ -252,12 +259,7 @@ export function Item({
             icon={removeAsync.loading ? LoaderIcon : CancelIcon}
             size={20}
             style={{ marginLeft: 15 }}
-            onClick={() => {
-              setEditable(false);
-              if (isCreate) {
-                onRemove && onRemove();
-              }
-            }}
+            onClick={handleItemRemove}
           />
         </span>
       )}

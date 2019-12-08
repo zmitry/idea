@@ -5,7 +5,7 @@ import LoaderIcon from "../assets/loader.gif";
 
 import styled from "@emotion/styled";
 import { Icon } from "../ui/Icon";
-import { useAsync } from "../useAsync";
+import { useAsync } from "../hooks/useAsync";
 import { getIdeas, Idea } from "../api";
 import { Item } from "./Item";
 
@@ -41,8 +41,7 @@ const PageWrapper = styled.div`
   }
   .divider {
     position: absolute;
-    width: 108%;
-    left: -4%;
+    width: 100%;
     top: 120px;
   }
 
@@ -61,15 +60,13 @@ export const Divider = styled.div`
   opacity: 0.2;
 `;
 
-function IdeasTemplate({
-  children,
-  onAdd,
-  empty
-}: {
+type IdeasTemplateProps = {
   children: React.ReactNode;
   onAdd: () => void;
   empty: boolean;
-}) {
+};
+
+function IdeasTemplate({ children, onAdd, empty }: IdeasTemplateProps) {
   const Header = (
     <React.Fragment>
       <span />
@@ -104,16 +101,41 @@ function IdeasTemplate({
     </PageWrapper>
   );
 }
+
+function Loader() {
+  return (
+    <div style={{ display: "flex" }}>
+      <Icon size={60} style={{ margin: "auto" }} icon={LoaderIcon} />
+    </div>
+  );
+}
+
 export function Ideas() {
-  const [newIdea, setNewIdea] = useState(null as Partial<Idea> | null);
-  const { value = [] as Idea[], setData, loading } = useAsync(getIdeas);
+  const [newIdea, setNewIdea] = useState<Partial<Idea>>();
+  const { value = [], setData, loading } = useAsync(getIdeas);
   if (loading) {
-    return (
-      <div style={{ display: "flex" }}>
-        <Icon size={60} style={{ margin: "auto" }} icon={LoaderIcon} />
-      </div>
+    return <Loader />;
+  }
+  function handleItemUpdate(values: Record<string, string>) {
+    setData(value =>
+      value.map(el => {
+        if (el.id === values.id) {
+          return values as any;
+        }
+        return el;
+      })
     );
   }
+
+  function handleItemCreate(values: Record<string, string>) {
+    setNewIdea(undefined);
+    setData(ideas => [values as any, ...ideas]);
+  }
+
+  function handleItemRemove(data: Idea) {
+    setData(value => value.filter(el => el.id !== data.id));
+  }
+
   return (
     <IdeasTemplate
       empty={value.length === 0 && !newIdea}
@@ -129,12 +151,9 @@ export function Ideas() {
         <Item
           isCreate={true}
           values={newIdea}
-          onSave={values => {
-            setNewIdea(null);
-            setData(ideas => [values as any, ...ideas]);
-          }}
+          onSave={handleItemCreate}
           onRemove={() => {
-            setNewIdea(null);
+            setNewIdea(undefined);
           }}
         />
       )}
@@ -142,18 +161,9 @@ export function Ideas() {
         <Item
           key={data.id}
           values={data}
-          onSave={values => {
-            setData(value =>
-              value.map(el => {
-                if (el.id === values.id) {
-                  return values as any;
-                }
-                return el;
-              })
-            );
-          }}
+          onSave={handleItemUpdate}
           onRemove={() => {
-            setData(value => value.filter(el => el.id !== data.id));
+            handleItemRemove(data);
           }}
         />
       ))}

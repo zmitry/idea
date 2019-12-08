@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Icon } from "./Icon";
-import { useAsync, useAsyncCall } from "../useAsync";
+import { useAsync, useAsyncCall } from "../hooks/useAsync";
 import { getUserData, logout } from "../api";
 import { Redirect } from "wouter";
 import LoaderIcon from "../assets/loader.gif";

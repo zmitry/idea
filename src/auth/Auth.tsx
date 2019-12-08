@@ -1,12 +1,12 @@
 // @jsx jsx
 import { jsx } from "@emotion/core";
 import React from "react";
-import { Field } from "./ui/Field";
+import { Field } from "../ui/Field";
 import styled from "@emotion/styled";
-import { useAsyncCall } from "./useAsync";
-import { login, signUp } from "./api";
+import { useAsyncCall } from "../hooks/useAsync";
+import { login, signUp } from "../api";
 import { Redirect, Link } from "wouter";
-import { decodeFormValues } from "./useFormValues";
+import { decodeFormValues } from "../hooks/useFormValues";
 
 const Button = styled.button`
   background: var(--primary);
@@ -17,19 +17,21 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+type AuthTemplateProps = {
+  children: React.ReactNode;
+  actions: React.ReactNode;
+  label: React.ReactNode;
+  error: React.ReactNode;
+  onSubmit: (values: Record<string, string>) => void;
+};
+
 function AuthTemplate({
   children,
   actions,
   label,
   onSubmit,
   error
-}: {
-  children: React.ReactNode;
-  actions: React.ReactNode;
-  label: React.ReactNode;
-  error: React.ReactNode;
-  onSubmit: (values: Record<string, string>) => void;
-}) {
+}: AuthTemplateProps) {
   return (
     <div
       css={{
@@ -56,7 +58,6 @@ function AuthTemplate({
         }}
       >
         <div style={{ color: "red" }}>{error}</div>
-
         {children}
         <div
           css={{
@@ -117,7 +118,7 @@ export function Login() {
         <React.Fragment>
           <Button type="submit">{loading ? "Loading..." : "Login"}</Button>
           <span>
-            Don’t have an account?{" "}
+            Don’t have an account?
             <Link href="/signup">{" Create an account"}</Link>
           </span>
         </React.Fragment>

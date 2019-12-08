@@ -2,7 +2,7 @@ import React from "react";
 import { Template, UserAvatar, HasAuth } from "./ui";
 import { Ideas } from "./ideas";
 import { Switch, Route, Redirect } from "wouter";
-import { SignUp, Login } from "./Auth";
+import { SignUp, Login } from "./auth/Auth";
 
 function App() {
   return (

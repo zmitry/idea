@@ -6,7 +6,6 @@ const FormGroup = styled.fieldset`
   margin-bottom: 20px;
   padding: 0;
   border: none;
-  font-size: var(--font4);
   label {
     position: absolute;
     top: 0;

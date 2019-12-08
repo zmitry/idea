@@ -1,6 +1,21 @@
 import axios from "axios";
 import { set, get, remove } from "js-cookie";
 
+export interface Idea {
+  id: string;
+  content: string;
+  impact: number;
+  ease: number;
+  confidence: number;
+  average_score: number;
+  created_at: number;
+}
+
+export interface User {
+  email: string;
+  name: string;
+  avatar_url: string;
+}
 const api = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
@@ -74,22 +89,6 @@ export function signUp(loginData: Record<string, string>) {
     set("refresh_token", refresh_token);
     return true;
   });
-}
-
-export interface Idea {
-  id: string;
-  content: string;
-  impact: number;
-  ease: number;
-  confidence: number;
-  average_score: number;
-  created_at: number;
-}
-
-export interface User {
-  email: string;
-  name: string;
-  avatar_url: string;
 }
 
 export function getIdeas(page = 1) {
