@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Template, UserAvatar, HasAuth } from "./ui";
+import { Ideas } from "./ideas";
+import { Theme } from "./theme";
+import { Switch, Route, Redirect, RedirectProps, Router } from "wouter";
+import { SignUp, Login } from "./Auth";
 
-const App: React.FC = () => {
+const RouteRedirect: React.FC<RedirectProps & { path: string }> = Redirect;
+
+function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Theme>
+      <Router>
+        <Switch>
+          <Route path="/login">
+            <Template>
+              <Login />
+            </Template>
+          </Route>
+          <Route path="/signup">
+            <Template>
+              <SignUp />
+            </Template>
+          </Route>
+          <Route path="/ideas">
+            <HasAuth>
+              <Template sidebar={<UserAvatar />}>
+                <Ideas />
+              </Template>
+            </HasAuth>
+          </Route>
+          <RouteRedirect path="/:rest*" to="/login" />
+        </Switch>
+      </Router>
+    </Theme>
   );
 }
 
