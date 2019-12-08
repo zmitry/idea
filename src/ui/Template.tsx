@@ -64,7 +64,6 @@ export function Template({
   children: React.ReactNode;
   sidebar?: React.ReactChild;
 }) {
-  console.log("sidebar: ", sidebar);
   return (
     <TemplateInternal>
       <div className="sidebar">

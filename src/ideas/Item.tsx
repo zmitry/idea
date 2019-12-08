@@ -176,6 +176,9 @@ export function Item({
     <StyledRow
       ref={formRef}
       key={String(isEditable)}
+      style={{
+        pointerEvents: removeAsync.loading ? "none" : "unset"
+      }}
       onSubmit={e => {
         e.preventDefault();
       }}

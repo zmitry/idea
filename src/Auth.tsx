@@ -105,7 +105,7 @@ export function SignUp() {
 
 export function Login() {
   const { error, call, loading, value } = useAsyncCall(login);
-  if (value) {
+  if (value && !error) {
     return <Redirect to="/ideas" />;
   }
   return (

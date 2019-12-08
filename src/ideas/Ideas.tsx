@@ -48,6 +48,10 @@ const PageWrapper = styled.div`
 
   .empty {
     grid-area: 1/1 / z/z;
+    .empty-contnet {
+      text-align: center;
+      font-size: var(--fontSize4);
+    }
   }
 `;
 
@@ -88,7 +92,10 @@ function IdeasTemplate({
         {empty ? (
           <div className="empty">
             <Icon size={96} icon={BulbIcon} />
-            <p style={{ textAlign: "center", fontSize: "var(--fontSize4)" }}>
+            <p
+              className="empty-content"
+              style={{ textAlign: "center", fontSize: "var(--fontSize4)" }}
+            >
               Got Ideas?
             </p>
           </div>
@@ -129,7 +136,7 @@ export function Ideas() {
           values={newIdea}
           onSave={values => {
             setNewIdea(null);
-            setData(value => value.concat(values as any));
+            setData(ideas => [values as any, ...ideas]);
           }}
           onRemove={() => {
             setNewIdea(null);

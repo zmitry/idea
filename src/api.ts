@@ -2,7 +2,7 @@ import axios from "axios";
 import { set, get, remove } from "js-cookie";
 
 const api = axios.create({
-  baseURL: "https://small-project-api.herokuapp.com",
+  baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json"
@@ -32,14 +32,17 @@ api.interceptors.response.use(
             // 3) return originalRequest object with Axios.
             return api.request(originalRequest);
           }
+          return Promise.reject(res);
         });
+    } else {
+      return Promise.reject(error);
     }
   }
 );
 
 export function login(loginData: Record<string, string>) {
-  return api.post("/access-tokens", loginData).then(({ data }) => {
-    const { jwt, refresh_token } = data;
+  return api.post("/access-tokens", loginData).then(res => {
+    const { jwt, refresh_token } = res.data;
     set("jwt", jwt, {
       sameSite: "strict"
     });
@@ -110,7 +113,7 @@ export function getUserData() {
 }
 
 export function checkAuthorized() {
-  return api.head<User>("/me").then(res => true);
+  return api.get<User>("/me").then(res => true);
 }
 
 export function updateIdea({
