@@ -48,7 +48,7 @@ const PageWrapper = styled.div`
 
   .empty {
     grid-area: 1/1 / z/z;
-    .empty-contnet {
+    .empty-content {
       text-align: center;
       font-size: var(--fontSize4);
     }
@@ -92,12 +92,7 @@ function IdeasTemplate({
         {empty ? (
           <div className="empty">
             <Icon size={96} icon={BulbIcon} />
-            <p
-              className="empty-content"
-              style={{ textAlign: "center", fontSize: "var(--fontSize4)" }}
-            >
-              Got Ideas?
-            </p>
+            <p className="empty-content">Got Ideas?</p>
           </div>
         ) : (
           <>

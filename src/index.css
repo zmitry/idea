@@ -8,12 +8,7 @@ body {
   font-size: 16px;
 }
 
-#root {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  min-height: 100vh;
-
+body {
   /* theme */
   --primary: rgba(0, 168, 67, 1);
   --secondary: rgb(42, 56, 66, 1);
@@ -27,6 +22,12 @@ body {
   --fontSize5: 16px;
   --fontSize6: 14px;
   --fontButton: 18px;
+}
+#root {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
 }
 #root > div {
   flex: 1;
